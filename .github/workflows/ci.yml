@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Smoke-test the core engine
+        run: node scripts/smoke-test.mjs
+      - name: Verify synced core copies are up to date
+        run: |
+          node scripts/sync-core.mjs
+          if ! git diff --quiet; then
+            echo "::error::core/ and the synced lib/ copies differ. Run 'npm run sync' and commit."
+            git --no-pager diff --stat
+            exit 1
+          fi

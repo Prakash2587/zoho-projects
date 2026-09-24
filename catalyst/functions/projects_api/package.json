@@ -1,0 +1,9 @@
+{
+  "name": "projects_api",
+  "version": "1.0.0",
+  "description": "Zoho Projects REST v3 bridge for the Capacity Planning agent (Advanced I/O).",
+  "main": "index.js",
+  "dependencies": {
+    "zcatalyst-sdk-node": "^2.0.0"
+  }
+}

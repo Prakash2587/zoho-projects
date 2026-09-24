@@ -1,0 +1,30 @@
+{
+  "service": "PROJECTS",
+  "cspDomains": {
+    "connect-src": ["*"]
+  },
+  "modules": {
+    "widgets": [
+      {
+        "location": "projects.tab.widget",
+        "url": "/app/widget.html",
+        "name": "Capacity Planning Agent",
+        "logo": "/assets/icon.png"
+      }
+    ]
+  },
+  "config": [],
+  "connectors": [
+    {
+      "name": "zohoprojects",
+      "palletName": "zohoprojects",
+      "connectionLinkName": "zohoprojects_conn",
+      "scope": [
+        "ZohoProjects.projects.ALL",
+        "ZohoProjects.milestones.ALL",
+        "ZohoProjects.tasklists.ALL",
+        "ZohoProjects.tasks.ALL"
+      ]
+    }
+  ]
+}

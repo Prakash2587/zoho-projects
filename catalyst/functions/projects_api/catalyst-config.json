@@ -1,0 +1,16 @@
+{
+  "deployment": {
+    "name": "projects_api",
+    "stack": "node20",
+    "type": "advancedio"
+  },
+  "execution": {
+    "main": "index.js"
+  },
+  "env_variables": {
+    "ZOHO_PROJECTS_API_BASE": "",
+    "ZOHO_PROJECTS_CONNECTOR": "",
+    "ZOHO_ACCOUNTS_DOMAIN": "",
+    "ZOHO_DEFAULT_PORTAL_ID": ""
+  }
+}

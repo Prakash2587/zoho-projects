@@ -1,0 +1,68 @@
+name: Deploy to Catalyst
+
+# Deploys the functions (and, optionally, the Slate client) to the Catalyst
+# Development environment. The CLI runs HERE, in CI — never on your desktop.
+#
+# The recommended path for the FRONTEND is Catalyst Slate's native Git
+# integration (connect this repo once in the console → auto-deploy on push,
+# with per-branch previews). This workflow covers the FUNCTIONS, and can also
+# push the client if you prefer one pipeline.
+#
+# One-time setup (see docs/SETUP.md):
+#   1. Locally: `catalyst login --dc <dc>` then `catalyst token:generate`.
+#   2. Add repo secrets: CATALYST_TOKEN, CATALYST_ORG_ID, CATALYST_PROJECT_ID
+#      and variable CATALYST_DC (us|eu|in|au|ca|sa|jp|uae).
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths:
+      - "catalyst/**"
+      - "core/**"
+      - ".github/workflows/deploy-catalyst.yml"
+
+concurrency:
+  group: catalyst-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Sync shared core into the client
+        run: node scripts/sync-core.mjs
+
+      - name: Guard — required secrets present
+        env:
+          CATALYST_TOKEN: ${{ secrets.CATALYST_TOKEN }}
+          CATALYST_ORG_ID: ${{ secrets.CATALYST_ORG_ID }}
+          CATALYST_PROJECT_ID: ${{ secrets.CATALYST_PROJECT_ID }}
+        run: |
+          if [ -z "$CATALYST_TOKEN" ] || [ -z "$CATALYST_ORG_ID" ] || [ -z "$CATALYST_PROJECT_ID" ]; then
+            echo "::error::Missing Catalyst secrets. See docs/SETUP.md. Skipping deploy."
+            exit 1
+          fi
+
+      - name: Install Catalyst CLI
+        run: npm install -g zcatalyst-cli
+
+      - name: Install function dependencies
+        working-directory: catalyst/functions/projects_api
+        run: npm install --omit=dev
+
+      - name: Deploy functions to Development
+        working-directory: catalyst
+        env:
+          ZCATALYST_NON_INTERACTIVE: "1"
+        run: |
+          catalyst deploy --only functions \
+            --token "${{ secrets.CATALYST_TOKEN }}" \
+            --org "${{ secrets.CATALYST_ORG_ID }}" \
+            -p "${{ secrets.CATALYST_PROJECT_ID }}" \
+            --dc "${{ vars.CATALYST_DC }}" -ni

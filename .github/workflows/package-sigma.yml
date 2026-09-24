@@ -1,0 +1,43 @@
+name: Package Sigma widget
+
+# Sigma has no git-native deploy — publishing requires uploading a ZIP to the
+# Zoho Sigma / Marketplace developer console. So this workflow validates and
+# packs the widget, then attaches the ZIP as a downloadable build artifact.
+# Download it from the run's "Artifacts" section and upload it in the console.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths:
+      - "sigma/**"
+      - "core/**"
+      - ".github/workflows/package-sigma.yml"
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Sync shared core into the widget
+        run: node scripts/sync-core.mjs
+
+      - name: Install Zoho Extension Toolkit (ZET)
+        run: npm install -g zoho-extension-toolkit
+
+      - name: Validate and pack
+        working-directory: sigma
+        run: |
+          zet validate || echo "::warning::zet validate reported issues — review before publishing."
+          zet pack
+
+      - name: Upload packaged widget
+        uses: actions/upload-artifact@v4
+        with:
+          name: capacity-planning-sigma-widget
+          path: sigma/dist/*.zip
+          if-no-files-found: warn

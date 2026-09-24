@@ -1,0 +1,8 @@
+{
+  "name": "capacity_app",
+  "version": "1.0.0",
+  "description": "Capacity Planning Agent — Slate static frontend.",
+  "scripts": {
+    "build": "node ../../../scripts/sync-core.mjs"
+  }
+}

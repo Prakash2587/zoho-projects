@@ -1,0 +1,10 @@
+{
+  "functions": [
+    {
+      "name": "projects_api"
+    }
+  ],
+  "client": {
+    "source": "client/capacity_app"
+  }
+}

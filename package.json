@@ -1,0 +1,16 @@
+{
+  "name": "zoho-projects-capacity-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Knowledge-base AI agent for Zoho Projects — Capacity Planning MVP. Deploys to Catalyst (web app) and Sigma (widget).",
+  "scripts": {
+    "sync": "node scripts/sync-core.mjs",
+    "test": "node scripts/smoke-test.mjs",
+    "prebuild": "node scripts/sync-core.mjs",
+    "build": "node scripts/sync-core.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

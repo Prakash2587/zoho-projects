@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Capacity Planning Agent</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="mark">⌁</span>
+        <div>
+          <strong>Capacity Planning Agent</strong>
+          <small>Best practice → formula → plan → Zoho Projects</small>
+        </div>
+      </div>
+      <span id="mode" class="mode-pill" title="Backend mode">connecting…</span>
+    </header>
+
+    <main id="chat" class="chat" aria-live="polite"></main>
+
+    <footer class="composer">
+      <div id="controls" class="controls"></div>
+    </footer>
+  </div>
+
+  <!-- Static Slate app: core ships as plain ES modules under ./lib (synced from /core). -->
+  <script type="module" src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Capacity Planning Agent</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Zoho Extension Toolkit SDK. Provided by the Sigma runtime inside Zoho Projects. -->
+  <script src="https://static.zohocdn.com/zohomarketplace/apptics/1.0/js/ZohoEmbededAppSDK.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="mark">⌁</span>
+        <div>
+          <strong>Capacity Planning</strong>
+          <small id="portal">this portal</small>
+        </div>
+      </div>
+      <span id="mode" class="mode-pill">dry-run</span>
+    </header>
+    <main id="chat" class="chat" aria-live="polite"></main>
+    <footer class="composer"><div id="controls" class="controls"></div></footer>
+  </div>
+  <script type="module" src="widget.js"></script>
+</body>
+</html>
