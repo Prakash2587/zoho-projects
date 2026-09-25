@@ -8,7 +8,7 @@
     "sync": "node scripts/sync-core.mjs",
     "test": "node scripts/smoke-test.mjs",
     "prebuild": "node scripts/sync-core.mjs",
-    "build": "node scripts/sync-core.mjs"
+    "build": "node scripts/build-slate.mjs"
   },
   "engines": {
     "node": ">=18"

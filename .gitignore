@@ -17,3 +17,6 @@ sigma/.zet/
 *.log
 .env
 .env.*
+
+# Slate build output (generated at deploy time)
+/dist/
