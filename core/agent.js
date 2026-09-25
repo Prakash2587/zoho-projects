@@ -163,11 +163,17 @@ function num(v, fallback = 0) {
 }
 
 function verdictSentence(v) {
-  const u = v.utilization;
-  if (v.overCommitted) {
-    return `You're over-committed by ${v.gap} h — ${v.demand} h of work against ${v.available} h available ` +
-      `(${u.value}% utilization, ${u.label.toLowerCase()}). Rebalance, extend the window, or add a resource.`;
+  const load = v.utilization.value; // % of real working hours
+  if (v.status === 'overloaded') {
+    return `Overloaded: ${v.demand} h of work exceeds even the ${v.availableBeforeBuffer} h your team ` +
+      `can physically work (${load}% of working hours). Cut scope, extend the window, or add people.`;
   }
-  return `You have room: ${v.demand} h of work against ${v.available} h available ` +
-    `(${u.value}% utilization — ${u.label.toLowerCase()}).`;
+  if (v.status === 'over_plan') {
+    return `Over your plan by ${v.gap} h: ${v.demand} h needs more than your ${v.available} h planned ` +
+      `capacity, eating ${v.intoBuffer} h of the ${v.buffer} h buffer you reserved. People would sit at ` +
+      `${load}% of working hours. Trim scope, spend buffer deliberately, or add capacity.`;
+  }
+  const headroom = Math.round((v.available - v.demand) * 10) / 10;
+  return `Fits: ${v.demand} h against ${v.available} h planned capacity — ${load}% of working hours` +
+    `${headroom > 0 ? `, ${headroom} h of headroom left` : ''}.`;
 }

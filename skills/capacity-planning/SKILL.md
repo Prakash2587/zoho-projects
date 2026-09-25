@@ -27,7 +27,11 @@ over-allocation, availability vs. allocation, sprint/period headroom, buffers,
 ## The flow, step by step
 
 1. **Ask** — Confirm the sub-intent: *measure my current state* or *set up from
-   scratch*. Predefined chips exist for both.
+   scratch*. Users can pick a chip **or type free-text** into the chat box; a
+   keyword/number router (`core/nlu.js`, swappable for the Claude API later)
+   picks the module and pulls any numbers out of the message. For *measure*,
+   users fill a short form, or click **Fetch from Zoho (sample)** for labelled
+   sample data (real data once OAuth is connected).
 2. **Best practices** — Serve the five practices in `references/best-practices.md`.
    Ground every point in a real Zoho Projects feature (Resource Utilization
    chart, Workload report, user work hours, Timesheets, Milestones/Task lists).
@@ -37,8 +41,10 @@ over-allocation, availability vs. allocation, sprint/period headroom, buffers,
    Full definitions and worked examples: `references/formulas.md`.
 4. **Draft plan** — Turn the verdict into a Zoho Projects structure (a project,
    a milestone for the window, "Committed work" + "Buffer & unplanned" task
-   lists, and tasks with hour estimates). Always **preview and get approval**
-   before writing.
+   lists, and tasks with hour estimates). The preview is **editable in place** —
+   rename the project/milestone/tasks, change hours, and add/remove tasks; the
+   apply payload rebuilds from the edited state. Always get approval before
+   writing.
 5. **Set it up** — Apply the plan via the Catalyst function (`/apply`), which
    calls Zoho Projects REST v3 over an OAuth connection. Until credentials are
    configured it returns a **dry-run** describing the exact calls — never a
@@ -49,8 +55,13 @@ over-allocation, availability vs. allocation, sprint/period headroom, buffers,
 - Never claim work was created in Zoho Projects unless the backend returned
   `mode: "live"` with created ids. In `dry-run`, say plainly that nothing was
   written.
-- Utilization above 90% is a burnout/slippage flag, not a target — recommend
-  rebalancing, extending the window, or adding a resource.
+- Report a single coherent status, never two conflicting ones. The engine uses
+  three fixed reference points: **raw working hours**, **planned capacity**
+  (raw − buffer), and **load** (demand ÷ raw). Status is `fits` (≤ planned),
+  `over_plan` (past planned, eats buffer, still within raw hours), or
+  `overloaded` (beyond raw hours). Utilization above 90% is a burnout/slippage
+  flag, not a target — recommend rebalancing, extending the window, or adding a
+  resource.
 - The buffer is real work; keep it visible as its own task, don't hide it.
 
 ## Reserved for the comprehensive set (post-MVP)

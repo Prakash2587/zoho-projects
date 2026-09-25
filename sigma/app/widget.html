@@ -21,7 +21,14 @@
       <span id="mode" class="mode-pill">dry-run</span>
     </header>
     <main id="chat" class="chat" aria-live="polite"></main>
-    <footer class="composer"><div id="controls" class="controls"></div></footer>
+    <footer class="composer">
+      <div id="controls" class="controls"></div>
+      <div class="chatbar">
+        <input id="chatInput" type="text" autocomplete="off"
+          placeholder="Describe your need — e.g. “Are we over-allocated next sprint?”" />
+        <button id="chatSend" class="send" type="button">Send</button>
+      </div>
+    </footer>
   </div>
   <script type="module" src="widget.js"></script>
 </body>

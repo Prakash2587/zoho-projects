@@ -98,19 +98,33 @@ function availableCapacity({
  */
 function capacityVerdict(demandHours, capacityInputs) {
   const cap = availableCapacity(capacityInputs);
-  // Utilization is measured against real working hours (before the planning
-  // buffer), so the buffer isn't counted twice: the gap check already reserves
-  // it. availableBeforeBuffer = gross − leave − holidays = value + buffer.
-  const availableBeforeBuffer = round(cap.value + cap.buffer, 1);
-  const util = utilization(demandHours, availableBeforeBuffer);
-  const gap = round(demandHours - cap.value, 1); // >0 means booked past bookable capacity
+  // Three honest reference points, one denominator each — so the headline never
+  // contradicts itself:
+  //   raw      = real working hours a team can physically put in
+  //   bookable = what you plan to fill (raw − reserved buffer)   [M2]
+  //   load     = demand as a % of raw working hours              [M1, guideline 70–85%]
+  const raw = round(cap.value + cap.buffer, 1); // gross − leave − holidays
+  const util = utilization(demandHours, raw);
+  const gap = round(demandHours - cap.value, 1); // >0 means past the bookable line
+  const intoBuffer = round(Math.max(0, Math.min(demandHours, raw) - cap.value), 1);
+
+  // Single status the whole UI keys off. `over_plan` means it eats the reserved
+  // buffer but people are still within real hours; `overloaded` means demand
+  // exceeds even raw working hours.
+  let status;
+  if (demandHours > raw) status = 'overloaded';
+  else if (gap > 0) status = 'over_plan';
+  else status = 'fits';
+
   return {
-    available: cap.value,            // bookable hours (buffer reserved)
-    availableBeforeBuffer,           // real working hours
+    available: cap.value,   // bookable (buffer reserved)
+    availableBeforeBuffer: raw,
     demand: round(demandHours, 1),
     gap,
+    intoBuffer,
     overCommitted: gap > 0,
-    utilization: util,
+    status,
+    utilization: util,      // load vs raw hours; .value is the % people are worked
     buffer: cap.buffer,
   };
 }

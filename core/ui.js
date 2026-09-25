@@ -32,11 +32,16 @@ export function renderMetrics(metrics) {
 }
 
 export function renderResults(r) {
-  const v = r.results.verdict, c = r.results.available;
+  const v = r.results.verdict;
+  const cls = v.status === 'fits' ? 'ok' : (v.status === 'overloaded' ? 'over' : 'warn');
   return `<h4>Your current state</h4>` +
-    `<div class="formula">Available capacity = ${c.value} h (gross ${c.gross} h − ${c.buffer} h buffer)\n` +
-    `Utilization = ${v.utilization.value}% — ${v.utilization.label}</div>` +
-    `<div class="result ${v.overCommitted ? 'over' : 'ok'}">${escapeHtml(r.say)}</div>`;
+    `<div class="formula">` +
+    `Working hours      ${v.availableBeforeBuffer} h\n` +
+    `Planned capacity   ${v.available} h  (after ${v.buffer} h buffer)\n` +
+    `Your demand        ${v.demand} h\n` +
+    `Load               ${v.utilization.value}% of working hours  (guideline 70–85%)` +
+    `</div>` +
+    `<div class="result ${cls}">${escapeHtml(r.say)}</div>`;
 }
 
 export function renderPlan(plan) {
